@@ -51,10 +51,14 @@ Trader.prototype.return_trades = function(market, callback) {
             var full_array = []; 
             trades.forEach( function(trade) {
               // convert to int
+              log.debug("Parsing trade id", trade.tradeid);
               trade.amount = Number(trade.quantity);
               trade.price = Number(trade.tradeprice);
               trade.tid = Number(trade.tradeid);
+              log.debug("Parsing date for trade ", trade.tradeid);
+              // ISSUE: this assumes that the local machine is in PDT
               trade.date = moment(Date.parse(trade.datetime)).subtract('hours', 3).unix();
+              log.debug("Pushing trade in to array for", trade.tradeid);
               full_array.push(trade);
             });
 
@@ -83,10 +87,13 @@ Trader.prototype.get_bid_ask = function(market, callback) {
             trades = trades.reverse();
             trades.forEach( function(trade) {
               // convert to int
-              if(trade.initiate_ordertype == 'Sell') 
+              if(trade.initiate_ordertype.toLowerCase() == 'sell') {
+                log.debug("Sell with initiate_ordertype", trade.initiate_ordertype, 'so using the price as the ask');
                 data_output.ask = Number(trade.tradeprice);
-              else
+              } else {
+                log.debug("Buy with initiate_ordertype", trade.initiate_ordertype, 'so using the price as the bid');
                 data_output.bid = Number(trade.tradeprice);
+              }
               data_output.datetime = trade.datetime;
             });
 
@@ -135,6 +142,9 @@ Trader.prototype.getTrades = function(since, callback, descending) {
 Trader.prototype.buy = function(amount, price, callback) {
 
   var mkt_name = this.market;
+  // [MM]: Something about cryptsy's orders seems to be behind the actual market, which causes orders to go unfilled.  
+  // Make the amount slightly on the upside of the actual price.
+  price = price * 1.003;
 
   log.debug('BUY', amount, this.asset, ' @', price, this.currency);
   this.place_order(mkt_name, 'buy', amount, price, _.bind(callback, this));
@@ -144,8 +154,11 @@ Trader.prototype.buy = function(amount, price, callback) {
 Trader.prototype.sell = function(amount, price, callback) {
 
   var mkt_name = this.market;
+  // [MM]: Something about cryptsy's orders seems to be behind the actual market, which causes orders to go unfilled.  
+  // Make the amount slightly on the downside of the actual price.
+  price = price * 0.997;
 
-  log.debug('BUY', amount, this.assset, ' @', price, this.currency);
+  log.debug('SELL', amount, this.asset, ' @', price, this.currency);
   this.place_order(mkt_name, 'sell', amount, price, _.bind(callback, this));
 }        
 
@@ -154,7 +167,7 @@ Trader.prototype.place_order = function(market_name, trans_type, amount, price, 
 
   var client = this.cryptsy;
 
-  log.debug(trans_type, 'order placed for ', amount, this.assset, ' @', price, this.currency);
+  //log.debug(trans_type, 'order placed for ', amount, this.asset, ' @', price, this.currency);
 
   //log.debug('client is ', client);
   client.getmarketid(market_name, function(market_id) {
