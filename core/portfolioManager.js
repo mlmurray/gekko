@@ -123,7 +123,9 @@ Manager.prototype.trade = function(what) {
     return;
 
   var act = function() {
-    var amount, price;
+    var amount, price, total_balance;
+
+    total_balance = this.getBalance(this.currency) + this.getBalance(this.asset) * this.ticker.bid;
 
     if(what === 'BUY') {
 
