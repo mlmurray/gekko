@@ -192,7 +192,7 @@ Manager.prototype.buy = function(amount, price) {
   var currency = this.getFund(this.currency);
   var minimum = this.getMinimum(price);
   var availabe = this.getBalance(this.currency) / price;
-
+  log.debug('Buying ', amount, 'with ', availabe, 'available, and a minimum of', minimum);
   // if not suficient funds
   if(amount > availabe) {
     return log.info(
@@ -204,12 +204,12 @@ Manager.prototype.buy = function(amount, price) {
     );
   }
 
-  // if order to small
+  // if order too small
   if(amount < minimum) {
     return log.info(
       'wanted to buy',
       this.asset,
-      'but the amount is to small',
+      'but the amount is too small',
       '(' + amount + ')',
       'at',
       this.exchange.name
@@ -238,9 +238,9 @@ Manager.prototype.sell = function(amount, price) {
 
   var minimum = this.getMinimum(price);
   var availabe = this.getBalance(this.asset);
-
+  log.debug('Selling ', amount, 'with ', availabe, 'available, and a minimum of', minimum);
   // if not suficient funds
-  if(amount < availabe) {
+  if(amount > availabe) {
     return log.info(
       'wanted to buy but insufficient',
       this.asset,
@@ -250,12 +250,12 @@ Manager.prototype.sell = function(amount, price) {
     );
   }
 
-  // if order to small
+  // if order too small
   if(amount < minimum) {
     return log.info(
       'wanted to buy',
       this.currency,
-      'but the amount is to small',
+      'but the amount is too small',
       '(' + amount + ')',
       'at',
       this.exchange.name
