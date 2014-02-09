@@ -22,9 +22,11 @@ config.debug = false; // for additional logging / debugging
 // Monitor the live market
 config.watch = {
   enabled: true,
-  exchange: 'Bitstamp', // 'MtGox', 'BTCe', 'Bitstamp', 'cexio' or 'kraken'
-  currency: 'USD',
-  asset: 'BTC'
+  exchange: 'cryptsy', // 'MtGox', 'BTCe', 'Bitstamp', 'cexio', 'cryptsy' or 'kraken'
+  key: '',
+  secret: '',
+  currency: 'BTC',
+  asset: 'DOGE'
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -42,12 +44,12 @@ config.tradingAdvisor = {
 config.DEMA = {
   // EMA weight (α)
   // the higher the weight, the more smooth (and delayed) the line
-  short: 10,
-  long: 21,
+  short: 11,
+  long: 31,
   // amount of candles to remember and base initial EMAs on
   // the difference between the EMAs (to act as triggers)
-  sellTreshold: -0.025,
-  buyTreshold: 0.025
+  sellTreshold: -0.35,
+  buyTreshold: 0.25
 };
 
 // MACD settings:
@@ -88,7 +90,8 @@ config.PPO = {
 // Enabling this will activate trades for the market being
 // watched by config.watch
 config.trader = {
-  enabled: false,
+  enabled: true,
+  tradePercent: 10,
   key: '',
   secret: '',
   username: '' // your username, only fill in when using bitstamp or cexio
@@ -112,7 +115,7 @@ config.profitSimulator = {
   // only want report after a sell? set to `false`.
   verbose: false,
   // how much fee in % does each trade cost?
-  fee: 0.6,
+  fee: 0.03,
   // how much slippage should Gekko assume per trade?
   slippage: 0.05
 }

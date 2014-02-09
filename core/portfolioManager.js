@@ -42,6 +42,7 @@ var Manager = function(conf) {
   });
   this.minimalOrder = this.marketConfig.minimalOrder;
 
+  this.tradePercent = conf.tradePercent;
   this.currency = conf.currency;
   this.asset = conf.asset;
 }
@@ -138,6 +139,9 @@ Manager.prototype.trade = function(what) {
       else
         price = this.ticker.ask;
 
+      if(this.tradePercent)
+        amount = amount * this.tradePercent / 100;
+
       this.buy(amount, price);
 
     } else if(what === 'SELL') {
@@ -153,6 +157,9 @@ Manager.prototype.trade = function(what) {
         price = false;
       else
         price = this.ticker.bid;
+
+      if(this.tradePercent)
+        amount = amount * this.tradePercent / 100;
       
       this.sell(amount, price);
     }
