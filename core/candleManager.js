@@ -793,6 +793,7 @@ Manager.prototype.addEmtpyCandles = function(candles, start, end) {
 
     if(min > max) {
       console.log('c', candles, 's', start, 'e', end);
+      console.log('min', min, 'max', max);
       throw 'Weird error 2';
     }
 
