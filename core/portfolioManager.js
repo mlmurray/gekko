@@ -141,8 +141,10 @@ Manager.prototype.trade = function(what) {
       else
         price = this.ticker.ask;
 
-      if(this.tradePercent)
+      if(this.tradePercent) {
+        log.debug('Trade Percent: adjusting amount', amount, 'by ', this.tradePercent, '%');
         amount = amount * this.tradePercent / 100;
+      }
 
       this.buy(amount, price);
 
@@ -160,8 +162,10 @@ Manager.prototype.trade = function(what) {
       else
         price = this.ticker.bid;
 
-      if(this.tradePercent)
+      if(this.tradePercent) {
+        log.debug('Trade Percent: adjusting amount', amount, 'by ', this.tradePercent, '%');
         amount = amount * this.tradePercent / 100;
+      }
       
       this.sell(amount, price);
     }
