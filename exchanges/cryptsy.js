@@ -56,7 +56,7 @@ Trader.prototype.return_trades = function(market, callback) {
               trade.price = Number(trade.tradeprice);
               trade.tid = Number(trade.tradeid);
               // ISSUE: this assumes that the local machine is in PDT
-              trade.date = moment(Date.parse(trade.datetime)).subtract('hours', 3).unix();
+              trade.date = moment(Date.parse(trade.datetime)).utc().unix();
               full_array.push(trade);
             });
 
