@@ -48,17 +48,15 @@ Trader.prototype.return_trades = function(market, callback) {
           //log.debug("Grabbing trades for id ", market_id);
           if(trades.length) {
             log.debug("There are ", trades.length, 'trades');
-            var full_array = []; 
+            var full_array = [];
+            //trades = trades.reverse();             
             trades.forEach( function(trade) {
               // convert to int
-              log.debug("Parsing trade id", trade.tradeid);
               trade.amount = Number(trade.quantity);
               trade.price = Number(trade.tradeprice);
               trade.tid = Number(trade.tradeid);
-              log.debug("Parsing date for trade ", trade.tradeid);
               // ISSUE: this assumes that the local machine is in PDT
               trade.date = moment(Date.parse(trade.datetime)).subtract('hours', 3).unix();
-              log.debug("Pushing trade in to array for", trade.tradeid);
               full_array.push(trade);
             });
 
@@ -88,11 +86,11 @@ Trader.prototype.get_bid_ask = function(market, callback) {
             trades.forEach( function(trade) {
               // convert to int
               if(trade.initiate_ordertype.toLowerCase() == 'sell') {
-                log.debug("Sell with initiate_ordertype", trade.initiate_ordertype, 'so using the price as the ask');
-                data_output.ask = Number(trade.tradeprice);
-              } else {
-                log.debug("Buy with initiate_ordertype", trade.initiate_ordertype, 'so using the price as the bid');
+                //log.debug("Sell with initiate_ordertype", trade.initiate_ordertype, 'so using the price as the ask');
                 data_output.bid = Number(trade.tradeprice);
+              } else {
+                //log.debug("Buy with initiate_ordertype", trade.initiate_ordertype, 'so using the price as the bid');
+                data_output.ask = Number(trade.tradeprice);
               }
               data_output.datetime = trade.datetime;
             });
@@ -208,28 +206,34 @@ Trader.prototype.retry = function(method, args, err) {
 
 Trader.prototype.getPortfolio = function(callback) {
   var args = _.toArray(arguments);
+  var curr_balance, asst_balance;
   var curr = this.currency;
   var asst = this.asset;
   log.debug('Get Portfolio with asset ', asst, 'and currency ', curr);
   var calculate = function(data) {
+     if(!data)
+      return this.retry(this.getPortfolio, args, null);
     balances = data.balances_available;
     holds = data.balances_hold; 
 
     curr_balance = parseFloat(balances[curr])
-    if(parseFloat(holds[curr])){
-      curr_balance -= parseFloat(holds[curr])
-    }
     asst_balance = parseFloat(balances[asst]);
-    if( parseFloat(holds[asst])){
-      asst_balance -= parseFloat(holds[asst]);
-    }
 
+    if(holds) {
+      if(parseFloat(holds[curr])){
+        curr_balance -= parseFloat(holds[curr])
+      }
+      
+      if( parseFloat(holds[asst])){
+        asst_balance -= parseFloat(holds[asst]);
+      }
+    }
+    
     var portfolio = [];
     portfolio.push({name: curr, amount: curr_balance});
     portfolio.push({name: asst, amount: asst_balance});
     callback(null, portfolio);
   }
-  log.debug('Get Portfolio running getinfo');
 
   this.cryptsy.getinfo(_.bind(calculate, this));
 }
