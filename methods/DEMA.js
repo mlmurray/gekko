@@ -50,7 +50,6 @@ TradingMethod.prototype.calculateAdvice = function() {
   var price = this.lastPrice;
 
   var message = '@ ' + price.toFixed(8) + ' (' + diff.toFixed(5) + ')';
-  log.debug('We are currently in the trend ', this.currentTrend);
 
   if (this.currentTrend == undefined ) {
     // We just started the program and we don't have a trend, so set it and wait until next time.
