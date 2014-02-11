@@ -209,7 +209,7 @@ Trader.prototype.getPortfolio = function(callback) {
   var curr_balance, asst_balance;
   var curr = this.currency;
   var asst = this.asset;
-  log.debug('Get Portfolio with asset ', asst, 'and currency ', curr);
+
   var calculate = function(data) {
      if(!data)
       return this.retry(this.getPortfolio, args, null);
@@ -241,7 +241,6 @@ Trader.prototype.getPortfolio = function(callback) {
 Trader.prototype.getTicker = function(callback) {
 
   var mkt_name = this.market;
-  log.debug('Get Ticker');
   var set = function(err, data) {
     log.debug('Timestamp is', data.datetime, 'with bid ', data.bid, 'and ask ', data.ask); 
     var ticker = {

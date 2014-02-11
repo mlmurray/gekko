@@ -16,14 +16,14 @@ Trader.prototype.processAdvice = function(advice) {
     log.info(
       'Trader',
       'Received advice to go long',
-      'Buying ', config.trader.asset
+      'Buying', config.trader.asset
     );
   } else if(advice.recommandation == 'short') {
     this.manager.trade('SELL');
     log.info(
       'Trader',
       'Received advice to go short',
-      'Selling ', config.trader.asset
+      'Selling', config.trader.asset
     );
   }
 }
