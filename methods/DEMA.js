@@ -50,7 +50,8 @@ TradingMethod.prototype.calculateAdvice = function() {
   var price = this.lastPrice;
 
   var message = '@ ' + price.toFixed(8) + ' (' + diff.toFixed(5) + ')';
-
+  log.debug('We are currently in the trend ', this.currentTrend);
+  
   if(diff > settings.buyTreshold) {
     log.debug('we are currently in uptrend', message);
 
