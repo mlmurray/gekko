@@ -51,8 +51,16 @@ TradingMethod.prototype.calculateAdvice = function() {
 
   var message = '@ ' + price.toFixed(8) + ' (' + diff.toFixed(5) + ')';
   log.debug('We are currently in the trend ', this.currentTrend);
-  
-  if(diff > settings.buyTreshold) {
+
+  if (this.currentTrend == undefined ) {
+    // We just started the program and we don't have a trend, so set it and wait until next time.
+    if (diff > settings.buyTreshold)
+      this.currentTrend = 'up';
+    else
+      this.currentTrend = 'down';
+    this.advice();            
+
+  } else if(diff > settings.buyTreshold) {
     log.debug('we are currently in uptrend', message);
 
     if(this.currentTrend !== 'up') {
