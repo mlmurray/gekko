@@ -25,10 +25,6 @@ var Trader = function(config) {
 
   this.market = this.pair;
 
-
-  log.debug('Configuring Cryptsy with key', this.key, ', secret', this.secret);
-  log.debug('Grabbing Cryptsy info for market', this.market, 'with id', this.market_id);
-
   _.bindAll(this);
 }
 
@@ -47,7 +43,7 @@ Trader.prototype.return_trades = function(market, callback) {
           m_id = market_id;
           //log.debug("Grabbing trades for id ", market_id);
           if(trades.length) {
-            log.debug("There are ", trades.length, 'trades');
+            //log.debug("There are ", trades.length, 'trades');
             var full_array = [];
             //trades = trades.reverse();             
             trades.forEach( function(trade) {
