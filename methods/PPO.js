@@ -51,7 +51,7 @@ TradingMethod.prototype.log = function () {
   var macdSignal = this.ppo.MACDsignal.result;
   var ppoSignal = this.ppo.PPOsignal.result;
 
-  log.debug('calced MACD properties for candle:');
+  log.debug('calced PPO properties for candle:');
   log.debug('\t', 'short:', short.toFixed(digits));
   log.debug('\t', 'long:', long.toFixed(digits));
   log.debug('\t', 'macd:', macd.toFixed(digits));
