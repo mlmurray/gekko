@@ -138,7 +138,7 @@ Trader.prototype.buy = function(amount, price, callback) {
   var mkt_name = this.market;
   // [MM]: Something about cryptsy's orders seems to be behind the actual market, which causes orders to go unfilled.  
   // Make the amount slightly on the upside of the actual price.
-  price = price * 1.003;
+  price = price * 1.005;
 
   log.debug('BUY', amount, this.asset, ' @', price, this.currency);
   this.place_order(mkt_name, 'buy', amount, price, _.bind(callback, this));
@@ -150,7 +150,7 @@ Trader.prototype.sell = function(amount, price, callback) {
   var mkt_name = this.market;
   // [MM]: Something about cryptsy's orders seems to be behind the actual market, which causes orders to go unfilled.  
   // Make the amount slightly on the downside of the actual price.
-  price = price * 0.997;
+  price = price * 0.995;
 
   log.debug('SELL', amount, this.asset, ' @', price, this.currency);
   this.place_order(mkt_name, 'sell', amount, price, _.bind(callback, this));
