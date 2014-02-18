@@ -139,7 +139,7 @@ TradingMethod.prototype.calculateAdvice = function() {
     // 
     // https://github.com/askmike/gekko/issues/171
     if ( settings.tradeAfterFlat ) {
-      log.debug("We want to Trade After Flat - setting trend to none")
+      log.debug("We want to Trade After Flat - setting trend to none");
       this.trend = {
          direction: 'none',
          duration: 0,
