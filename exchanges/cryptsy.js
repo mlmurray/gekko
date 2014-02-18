@@ -36,30 +36,37 @@ Trader.prototype.return_trades = function(market, callback) {
   var client = this.cryptsy;
 
   //log.debug('client is ', client);
-  client.getmarketid(market, function(market_id) {
-      //log.debug('id is', market_id);
-      // Display user's trades in that market
-      client.markettrades(market_id, function(trades) {
-          m_id = market_id;
-          //log.debug("Grabbing trades for id ", market_id);
-          if(trades.length) {
-            //log.debug("There are ", trades.length, 'trades');
-            var full_array = [];
-            //trades = trades.reverse();             
-            trades.forEach( function(trade) {
-              // convert to int
-              trade.amount = Number(trade.quantity);
-              trade.price = Number(trade.tradeprice);
-              trade.tid = Number(trade.tradeid);
-              // ISSUE: this assumes that the local machine is in PDT
-              trade.date = moment(Date.parse(trade.datetime)).utc().unix();
-              full_array.push(trade);
-            });
+  try { 
+    client.getmarketid(market, function(market_id) {
+        //log.debug('id is', market_id);
+        // Display user's trades in that market
+        client.markettrades(market_id, function(trades) {
+            m_id = market_id;
+            //log.debug("Grabbing trades for id ", market_id);
+            if(trades.length) {
+              //log.debug("There are ", trades.length, 'trades');
+              var full_array = [];
+              //trades = trades.reverse();             
+              trades.forEach( function(trade) {
+                // convert to int
+                trade.amount = Number(trade.quantity);
+                trade.price = Number(trade.tradeprice);
+                trade.tid = Number(trade.tradeid);
+                // ISSUE: this assumes that the local machine is in PDT
+                trade.date = moment(Date.parse(trade.datetime)).utc().unix();
+                full_array.push(trade);
+              });
 
-            callback(null, full_array);
-          }
-      });
-  });
+              callback(null, full_array);
+            }
+        });
+    });
+  }
+  catch(err) {
+    log.info("Crytpsy API had an error: ", err, "Retrying.");
+    return this.retry(this.return_trades, args, err);
+  }
+
   //this.market_id = m_id;  
 }
 
@@ -162,15 +169,20 @@ Trader.prototype.place_order = function(market_name, trans_type, amount, price, 
   var client = this.cryptsy;
 
   //log.debug(trans_type, 'order placed for ', amount, this.asset, ' @', price, this.currency);
-
-  //log.debug('client is ', client);
-  client.getmarketid(market_name, function(market_id) {
-      //log.debug('id is', market_id);
-      client.createorder(market_id, trans_type, amount, price, function(orderid) {
-            callback(null, orderid);
-          
-      });
-  });
+  try {
+    //log.debug('client is ', client);
+    client.getmarketid(market_name, function(market_id) {
+        //log.debug('id is', market_id);
+        client.createorder(market_id, trans_type, amount, price, function(orderid) {
+              callback(null, orderid);
+            
+        });
+    });
+  }
+  catch(err){
+    log.info("Crytpsy API had an error in place_order: ", err, "Retrying.");
+    return this.retry(this.place_order, args, err);
+  }
 }
 
 
