@@ -12,7 +12,13 @@ var DEMA = require('./indicators/DEMA.js');
 var TradingMethod = function() {
   _.bindAll(this);
 
-  this.currentTrend;
+  this.trend = {
+    direction: 'undefined',
+    duration: 0,
+    persisted: false,
+    adviced: false
+  };
+
   this.historySize = config.tradingAdvisor.historySize;
   this.dema = new DEMA(settings);
 }
@@ -52,34 +58,80 @@ TradingMethod.prototype.calculateAdvice = function() {
   var message = '@ ' + price.toFixed(8) + ' (' + diff.toFixed(5) + ')';
 
 
-  if (this.currentTrend == undefined ) {
+  if (this.trend.direction === 'undefined' ) {
     // We just started the program and we don't have a trend, so set it and wait until next time.
     if (diff > settings.thresholds.up)
-      this.currentTrend = 'up';
+      this.trend.direction = 'up';
     else
-      this.currentTrend = 'down';
-    this.advice();            
-
+      this.trend.direction = 'down';
+    this.advice(); 
   } else if(diff > settings.thresholds.up) {
-    log.debug('we are currently in uptrend', message);
 
-    if(this.currentTrend !== 'up') {
-      this.currentTrend = 'up';
+    // new trend detected
+    if(this.trend.direction !== 'up')
+      this.trend = {
+        duration: 0,
+        persisted: false,
+        direction: 'up',
+        adviced: false
+      };
+
+    this.trend.duration++;
+
+    log.debug('In uptrend since', this.trend.duration, 'candle(s)');
+
+    if(this.trend.duration >= settings.thresholds.persistence)
+      this.trend.persisted = true;
+
+    if(this.trend.persisted && !this.trend.adviced) {
+      this.trend.adviced = true;
       this.advice('long');
     } else
       this.advice();
-
+    
   } else if(diff < settings.thresholds.down) {
-    log.debug('we are currently in a downtrend', message);
 
-    if(this.currentTrend !== 'down') {
-      this.currentTrend = 'down';
+    // new trend detected
+    if(this.trend.direction !== 'down')
+      this.trend = {
+        duration: 0,
+        persisted: false,
+        direction: 'down',
+        adviced: false
+      };
+
+    this.trend.duration++;
+
+    log.debug('In downtrend since', this.trend.duration, 'candle(s)');
+
+    if(this.trend.duration >= settings.thresholds.persistence)
+      this.trend.persisted = true;
+
+    if(this.trend.persisted && !this.trend.adviced) {
+      this.trend.adviced = true;
       this.advice('short');
     } else
       this.advice();
 
+
   } else {
-    log.debug('we are currently not in an up or down trend', message);
+
+    log.debug('In no trend');
+
+    // we're not in an up nor in a downtrend
+    // but for now we ignore sideways trends
+    // 
+    // read more @link:
+    // 
+    // https://github.com/askmike/gekko/issues/171
+
+    // this.trend = {
+    //   direction: 'none',
+    //   duration: 0,
+    //   persisted: false,
+    //   adviced: false
+    // };
+
     this.advice();
   }
 }

@@ -18,7 +18,7 @@ var TradingMethod = function() {
 
 
   this.trend = {
-    direction: 'none',
+    direction: 'undefined',
     duration: 0,
     persisted: false,
     adviced: false
@@ -82,7 +82,15 @@ TradingMethod.prototype.calculateAdvice = function() {
   var macdHist = macd - macdSignal;
   var ppoHist = ppo - ppoSignal;
 
-  if(ppoHist > settings.thresholds.up) {
+  
+  if ((!settings.tradeOnStart && this.trend.direction === 'undefined' ) {
+    // We just started the program and we don't have a trend, so set it and wait until next time.
+    if (diff > settings.thresholds.up)
+      this.trend.direction = 'up';
+    else
+      this.trend.direction = 'down';
+    this.advice(); 
+  } else if(ppoHist > settings.thresholds.up) {
 
     // new trend detected
     if(this.trend.direction !== 'up')

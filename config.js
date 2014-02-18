@@ -42,6 +42,8 @@ config.tradingAdvisor = {
 
 // Exponential Moving Averages settings:
 config.DEMA = {
+  // tradeOnStart: trade at the first position that advice is calculated for
+  tradeOnStart: false, 
   // EMA weight (α)
   // the higher the weight, the more smooth (and delayed) the line
   short: 11,
@@ -57,6 +59,9 @@ config.DEMA = {
 
 // MACD settings:
 config.MACD = {
+  // tradeOnStart: trade at the first position that advice is calculated for
+  tradeOnStart: false, 
+
   // EMA weight (α)
   // the higher the weight, the more smooth (and delayed) the line
   short: 10,
@@ -74,6 +79,9 @@ config.MACD = {
 
 // PPO settings:
 config.PPO = {
+  // tradeOnStart: trade at the first position that advice is calculated for
+  tradeOnStart: false, 
+
   // EMA weight (α)
   // the higher the weight, the more smooth (and delayed) the line
   short: 12,
