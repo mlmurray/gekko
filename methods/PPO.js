@@ -158,6 +158,7 @@ TradingMethod.prototype.calculateAdvice = function() {
          persisted: false,
          adviced: false
       };
+    }
 
     this.advice();
   }
