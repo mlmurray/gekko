@@ -72,7 +72,7 @@ TradingMethod.prototype.calculateAdvice = function() {
   var macddiff = this.macd.result;
 
 
-  if ((!settings.tradeOnStart && this.trend.direction === 'undefined' ) {
+  if (!settings.tradeOnStart && this.trend.direction === 'undefined' ) {
     // We just started the program and we don't have a trend, so set it and wait until next time.
     if (diff > settings.thresholds.up)
       this.trend.direction = 'up';
