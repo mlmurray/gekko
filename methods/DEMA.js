@@ -60,6 +60,7 @@ TradingMethod.prototype.calculateAdvice = function() {
 
   if (!settings.tradeOnStart && this.trend.direction === 'undefined' ) {
     // We just started the program and we don't have a trend, so set it and wait until next time.
+    log.debug("Trade On Start Disabled and No Direction Defined.");    
     if (diff > settings.thresholds.up)
       this.trend.direction = 'up';
     else
