@@ -1,20 +1,19 @@
 var Bitstamp = require("bitstamp");
-var util = require('../util.js');
+var util = require('../core/util.js');
 var _ = require('lodash');
 var moment = require('moment');
-var log = require('../log');
+var log = require('../core/log');
 
 var Trader = function(config) {
+  _.bindAll(this);
   if(_.isObject(config)) {
     this.key = config.key;
     this.secret = config.secret;
-    this.clientID = config.clientID;
+    this.clientID = config.username;
   }
   this.name = 'Bitstamp';
   this.balance;
   this.price;
-
-  _.bindAll(this);
 
   this.bitstamp = new Bitstamp(this.key, this.secret, this.clientID);
 }
@@ -62,7 +61,10 @@ Trader.prototype.getTicker = function(callback) {
 
 Trader.prototype.getFee = function(callback) {
   var set = function(err, data) {
-    callback(err, data.fee / 100);
+    if(err)
+      callback(err);
+
+    callback(false, data.fee / 100);
   }
   this.bitstamp.balance(_.bind(set, this));
 }
@@ -110,6 +112,18 @@ Trader.prototype.cancelOrder = function(order, callback) {
   };
 
   this.bitstamp.cancel_orders(order, _.bind(cancel, this));
+}
+
+Trader.prototype.getTrades = function(since, callback, descending) {
+  var args = _.toArray(arguments);
+  var process = function(err, result) {
+    if(err)
+      return this.retry(this.getTrades, args);
+
+    callback(null, result.reverse());
+  };
+
+  this.bitstamp.transactions(_.bind(process, this));
 }
 
 

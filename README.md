@@ -1,4 +1,30 @@
-# Gekko
+# Important note
+
+You are looking at the new and completetly different version of Gekko that is being developed right now. **It is not stable yet, it might crash and we need to validate the advice to be solid.**
+
+## What we know doesn't work
+
+- Not 100% this is stable. Let me know if there is a bug!
+
+## What we hope does work
+
+**Everything listed in the [Configuring Gekko Doc](https://github.com/askmike/gekko/tree/localDB/docs/Configuring_gekko.md). This document lists everything you can do with Gekko and how to do it.** The list boils down to:
+
+- watch any market on BTC-e, Bitstamp, Mt. Gox, CEX.io.
+- calculate MACD, DEMO or PPO over this market.
+- use the following plugins:
+    - real trader (automatic trading on advice)
+    - advice logger
+    - profit simulator
+    - Mailer (on advice)
+    - IRC bot
+    - Redis beacon
+
+Here is [the todo](https://github.com/askmike/gekko/issues/114) until the new version is considered stable.
+
+If you encounter a bug: check out in [the issues](https://github.com/askmike/gekko/issues/114) if we are aware of it and if not create a new one :)
+
+# Gekko [![Build Status](https://travis-ci.org/askmike/gekko.png)](https://travis-ci.org/askmike/gekko)
 
 ## Important note -  jan 2014
 
@@ -26,47 +52,52 @@ Join the discussion and help out!
 
 -Gordon Gekko
 
-Gekko is a Bitcoin trading bot for popular exchanges written in javascript running on [nodejs](http://nodejs.org), it will feature multiple trading methods using technical analysis (at this moment it only knows EMA). It can monitor the live market or backtest strategies on historical data.
+Gekko is a Bitcoin trading bot and backtesting platform that connects to popular Bitcoin exchanges. It is written in javascript and runs on [nodejs](http://nodejs.org).
 
 ## Main features
 
-* Paper trading
-* Live trading (trade bot)
-* Backtesting
+* Trading platform:
+ * Paper trading
+ * ~~Live trading (trade bot)~~
+ * ~~Backtesting~~
+* Market API / interface:
+ * Emit market events
+ * Basic IRC Bot
 
 ## What?
 
 This project is a learning excercise of me, a student with *some* experience in programming (mostly web) and zero experience in economics and trading. I figured writing my own trade bot would be the best way to learn about implementing mathematical trading algorithms. So here is **my very first attempt at anything related to trading / algorithmic decision making**.
 
-I'm developing Gekko fully open source in the hope of getting feedback from folks with more experience in this field. Because I not only want to attract programmers I am doing my best to make the code as readable as possible, this includes a lot of comments and probably not the most efficient (but expressive) code.
-
 As this is a learning experience for me all feedback is extremely appreciated. If you don't want to contribute to the code you can always just send me an [email](mailto:mike@mvr.me) or leave feedback in the [Gekko thread on the bitcointalk forum](https://bitcointalk.org/index.php?topic=209149.0).
 
 *Use Gekko at you own risk.*
 
-### Paper & live trading 
+## Trading platform
 
-Gekko uses Technical Analysis (only EMA at this moment) to determine when to enter or leave the live market, at such a moment it can:
+Gekko can watch the realtime markets. You can apply automated trading methods to realtime data coming in to do live or simulated trading (automated trading or paper trading). Gekko also stores the market data it sees so you can run the trading methods with simulate trades on a set of historical data to see whether they would have been profitable during that time (backtesting).
 
-* Advice on what you should do (for example per email).
-* Calculate the profits of all the advices so far.
-* Automatically trade.
-
-Gekko currently supports paper & live trading at the following exchanges:
-
+<<<<<<< HEAD
 * [Mt. Gox](https://mtgox.com/)
 * ~~[BTC-e](https://btc-e.com/)~~
 * ~~[cex.io](https://cex.io) (commodity exchange for mining power)~~
+=======
+Gekko, as well as the current bitcoin exchanges, are not built for HFT or anything related to being the fastest. The trading methods Gekko can do are based on indicators used by human day traders. The result is that Gekko does not look at data below the one minute timescale and (depending on configuration) and will normally not trade more than a couple of times per week (also depending on configuration).
+>>>>>>> localDB
 
-Gekko supports paper trading at the following exchanges:
+So Gekko is not:
 
-* [Bitstamp](https://bitstamp.net) (Live trading broken at the moment)
+- A trading platform for human day traders with a GUI and charts.
+- A High frequency trading bot designed to operate on < minute resolution.
 
-### Backtesting
+## Supported exchanges
 
-You can also backtest strategies using Gekko. I am currently expanding and improving the backtester and I could use all the feedback I can get. Keep in mind that I currently would not suggest applying strategies for real investments based on the result, consider it alpha stage. 
+Gekko works on the following exchanges:
 
-You can find more detailed information in the [document about Backtesting](https://github.com/askmike/gekko/blob/master/docs/Backtesting.md) as well as how to set it up.
+- Mt. Gox
+- Bitstamp
+- CEX.io
+- Kraken
+- BTC-e
 
 ## Installing Gekko
 
@@ -83,7 +114,7 @@ You need to download Gekko's dependencies, which can easily be done with [npm](h
 
 ## Configuring Gekko
 
-To change the settings, open up and edit [config.js](https://github.com/askmike/gekko/blob/master/config.js) to change the parameters. Check out doc on [Configuring Gekko](https://github.com/askmike/gekko/blob/master/docs/Configuring_gekko.md) where everything is explained in more detail.
+Read the [configuring Gekko documentation](https://github.com/askmike/gekko/tree/localDB/docs/Configuring_gekko.md).
 
 ## Running Gekko
 
@@ -91,7 +122,7 @@ To run the bot you just have to start Gekko:
 
     node gekko
 
-You can also run Gekko silently, for examples on how to do this check out the [advanced features](https://github.com/askmike/gekko/blob/master/docs/Advanced_features.md).
+You can also run Gekko silently, for examples on how to do this check out the [advanced features](https://github.com/askmike/gekko/tree/localDB/docs/Advanced_features.md).
 
 ## Updating Gekko
 
@@ -118,8 +149,8 @@ After the first fetching, every new interval (in the [config](https://github.com
 ### Advice
 
 * HOLD means don't do anything, we are either not in a trend or the trend has not changed since last check.
-* BUY means the trend has changed to an uptrend, advice is to buy now so we can sell at the end of the trend.
-* SELL means the trend has chacnged to a downtrend, advice is to sell now so we can buy back at the end of the trend.
+* LONG means the trend has changed to an uptrend, advice is to buy now so we can sell at the end of the trend.
+* SHORT means the trend has chacnged to a downtrend, advice is to sell now so we can buy back at the end of the trend.
 
 After every line of advice we can see the current price Gekko calculated and the difference in EMAs, this makes it easier to understand the advice.
 
@@ -129,18 +160,18 @@ The profit report will log out Gekko's profit since it started, this is done usi
 
 *If Gekko logs 20% that means that if you would have had automatic trading enabled on an exchange account with a balance of 1BTC, you would now have 1.2BTC.*
 
-### Buying and selling
+### ~~Buying and selling~~
 
-If you configured Gekko to automatically sell on this information it will also log:
+~~If you configured Gekko to automatically sell on this information it will also log:~~
 
-* NOW going to BUY, when it is buying BTC.
-* NOW going to SELL, when it is selling BTC.
+* ~~NOW going to BUY, when it is buying BTC.~~
+* ~~NOW going to SELL, when it is selling BTC.~~
 
 ## TODO
 
-* Add more exchanges (such as [bitfloor](https://npmjs.org/package/bitfloor), [campBX](https://npmjs.org/package/campbx)).
-* Store trade history in levelDB.
-* Add money management (so that the bot will only spend a start amount of X and the profits on top of X).
+* More exchanges (cryptsy, bitfinex, kraken, btcchina)
+* More trading methods
+* Webbased interface
 
 ## Credits
 
