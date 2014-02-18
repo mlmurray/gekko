@@ -13,7 +13,7 @@ config.history = {
   // and load historical data from?
   directory: './history/'
 }
-config.debug = false; // for additional logging / debugging
+config.debug = true; // for additional logging / debugging
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //                         WATCHING A MARKET
@@ -36,7 +36,7 @@ config.watch = {
 config.tradingAdvisor = {
   enabled: true,
   method: 'DEMA',
-  candleSize: 30,
+  candleSize: 60,
   historySize: 50
 }
 
@@ -48,8 +48,11 @@ config.DEMA = {
   long: 31,
   // amount of candles to remember and base initial EMAs on
   // the difference between the EMAs (to act as triggers)
-  sellTreshold: -0.35,
-  buyTreshold: 0.25
+
+  thresholds: {
+    down: -0.025,
+    up: 0.025
+  }
 };
 
 // MACD settings:
@@ -60,10 +63,13 @@ config.MACD = {
   long: 21,
   signal: 9,
   // the difference between the EMAs (to act as triggers)
-  sellThreshold: -0.025,
-  buyThreshold: 0.025,
-  // How many candle intervals until trigger fires
-  persistence: 5
+  thresholds: {
+    down: -0.025,
+    up: 0.025,
+    // How many candle intervals should a trend persist
+    // before we consider it real?
+    persistence: 1
+  }
 };
 
 // PPO settings:
@@ -74,12 +80,13 @@ config.PPO = {
   long: 26,
   signal: 9,
   // the difference between the EMAs (to act as triggers)
-  sellThreshold: -0.3,
-  buyThreshold: 0.3,
-  // How many candle intervals until trigger fires
-  persistence: 1,
-  // Provide debugging output / verbose output
-  verbose: true
+  thresholds: {
+    down: -0.025,
+    up: 0.025,
+    // How many candle intervals should a trend persist
+    // before we consider it real?
+    persistence: 2
+  }
 };
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,18 +104,13 @@ config.trader = {
   username: '' // your username, only fill in when using bitstamp or cexio
 }
 
-<<<<<<< HEAD
 // want Gekko to send a mail on buy or sell advice?
 config.mail = {
   enabled: false,
-  sendMailOnStart: true,
-  what: ['BUY', 'SELL'], // send email by type of advice: any combination of 'BUY', 'SELL', 'HOLD'
-  email: '',    // the receiver of the email, e.g. bob@example.com
-  smtp: 'smtp.gmail.com',   // if no smtp server specified, fallback to mail.gmail.com
-  port: 25,     // use a different smtp port
-  ssl: true,    
-  tls: false,   // set to true if want STARTTLS
-  user: '',    // the username, this is the sender of the email, e.g. alice@example.com
+  key: '',
+  secret: '',
+  username: '' // your username, only fill in when using bitstamp or cexio
+}
 
   // You don't have to set your password here, if you leave it blank we will ask it
   // when Gekko's starts.
@@ -120,10 +122,9 @@ config.mail = {
   // WARNING: If you have NOT downloaded Gekko from the github page above we CANNOT
   // garantuee that your email address & password are safe!
   password: ''
-=======
+
 config.adviceLogger = {
   enabled: true
->>>>>>> localDB
 }
 
 // do you want Gekko to calculate the profit of its own advice?
@@ -147,10 +148,10 @@ config.profitSimulator = {
 
 // want Gekko to send a mail on buy or sell advice?
 config.mailer = {
-  enabled: false, 			// Send Emails if true, false to turn off
-  sendMailOnStart: true,		// Send 'Gekko starting' message if true, not if false
+  enabled: false,       // Send Emails if true, false to turn off
+  sendMailOnStart: true,    // Send 'Gekko starting' message if true, not if false
 
-  email: '',		// Your Gmail address
+  email: '',    // Your Gmail address
 
   // You don't have to set your password here, if you leave it blank we will ask it
   // when Gekko's starts.
@@ -162,23 +163,23 @@ config.mailer = {
   // WARNING: If you have NOT downloaded Gekko from the github page above we CANNOT
   // guarantuee that your email address & password are safe!
 
-  password: '',				// Your Gmail Password - if not supplied Gekko will prompt on startup.
+  password: '',       // Your Gmail Password - if not supplied Gekko will prompt on startup.
 
-  tag: '[GEKKO] ',			// Prefix all email subject lines with this
+  tag: '[GEKKO] ',      // Prefix all email subject lines with this
 
             //       ADVANCED MAIL SETTINGS
             // you can leave those as is if you 
             // just want to use Gmail
 
-  server: 'smtp.gmail.com',		// The name of YOUR outbound (SMTP) mail server.
-  smtpauth: true,			// Does SMTP server require authentication (true for Gmail)
-					// The following 3 values default to the Email (above) if left blank
-  user: '',				// Your Email server user name - usually your full Email address 'me@mydomain.com'
-  from: '',				// 'me@mydomain.com'
-  to: '',				// 'me@somedomain.com, me@someotherdomain.com'
-  ssl: true,				// Use SSL (true for Gmail)
-  port: '',				// Set if you don't want to use the default port
-  tls: false				// Use TLS if true
+  server: 'smtp.gmail.com',   // The name of YOUR outbound (SMTP) mail server.
+  smtpauth: true,     // Does SMTP server require authentication (true for Gmail)
+          // The following 3 values default to the Email (above) if left blank
+  user: '',       // Your Email server user name - usually your full Email address 'me@mydomain.com'
+  from: '',       // 'me@mydomain.com'
+  to: '',       // 'me@somedomain.com, me@someotherdomain.com'
+  ssl: true,        // Use SSL (true for Gmail)
+  port: '',       // Set if you don't want to use the default port
+  tls: false        // Use TLS if true
 }
 
 
@@ -228,12 +229,22 @@ config.webserver = {
   }
 }
 
-
-
-
 // not working, leave as is
 config.backtest = {
   enabled: false
 }
+
+// set this to true if you understand that Gekko will 
+// invest according to how you configured the indicators.
+// None of the advice in the output is Gekko telling you
+// to take a certain position. Instead it is the result 
+// of running the indicators you configured automatically.
+// 
+// In other words: Gekko automates your trading strategies,
+// it doesn't advice on itself, only set to true if you truly
+// understand this.
+// 
+// Not sure? Read this first: https://github.com/askmike/gekko/issues/201
+config['I understand that Gekko only automates MY OWN trading strategies'] = false;
 
 module.exports = config;

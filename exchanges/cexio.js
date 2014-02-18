@@ -55,7 +55,7 @@ Trader.prototype.buy = function(amount, price, callback) {
       return log.error('unable to buy:', data.error);
 
     log.debug('BUY order placed.  Order ID', data.id);
-    callback(data.id);
+    callback(null, data.id);
   };
 
   this.cexio.place_order('buy', amount, price, _.bind(set, this));
@@ -80,7 +80,7 @@ Trader.prototype.sell = function(amount, price, callback) {
       return log.error('unable to sell:', data.error);
 
     log.debug('SELL order placed.  Order ID', data.id);
-    callback(data.id);
+    callback(null, data.id);
   };
 
   this.cexio.place_order('sell', amount, price, _.bind(set, this));
@@ -148,6 +148,7 @@ Trader.prototype.getTicker = function(callback) {
 
 Trader.prototype.getFee = function(callback) {
   // cexio does currently don't take a fee on trades
+  // TODO: isn't there an API call for this?
   callback(false, 0.0);
 }
 
@@ -155,14 +156,15 @@ Trader.prototype.checkOrder = function(order, callback) {
   var check = function(err, result) {
 
     if(err)
-      callback(false, true);
+      return callback(false, true);
     if(result.error)
-      callback(false, true);
+      return callback(false, true);
 
     var exists = false;
-    _.forEach(result, function(entry) {
+    _.each(result, function(entry) {
       if(entry.id === order) {
-        exists = true; return;
+        exists = true;
+        return;
       }
     });
     callback(err, !exists);

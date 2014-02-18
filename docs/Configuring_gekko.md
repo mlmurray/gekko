@@ -111,13 +111,15 @@ You can configure these parameters for DEMA in config.js:
       long: 21,
       // amount of candles to remember and base initial EMAs on
       // the difference between the EMAs (to act as triggers)
-      sellTreshold: -0.025,
-      buyTreshold: 0.025
+      thresholds: {
+        down: -0.025,
+        up: 0.025
+      }
     };
 
 - short is the short EMA that moves closer to the real market (including noise)
 - long is the long EMA that lags behind the market more but is also more resistant to noise.
-- sellTreshold and buyTreshold tells Gekko how big the difference in the lines needs to be for it to be considered a trend. If you set these to 0 each line cross would trigger new advice.
+- the down treshold and the up treshold tell Gekko how big the difference in the lines needs to be for it to be considered a trend. If you set these to 0 each line cross would trigger new advice.
 
 ### MACD
 
@@ -133,16 +135,19 @@ You can configure these parameters for MACD in config.js:
       long: 21,
       signal: 9,
       // the difference between the EMAs (to act as triggers)
-      sellThreshold: -0.025,
-      buyThreshold: 0.025,
-      // How many candle intervals until trigger fires
-      persistence: 5
+      thresholds: {
+        down: -0.025,
+        up: 0.025,
+        // How many candle intervals should a trend persist
+        // before we consider it real?
+        persistence: 1
+      }
     };
 
 - short is the short EMA that moves closer to the real market (including noise)
 - long is the long EMA that lags behind the market more but is also more resistant to noise.
 - signal is the EMA weight calculated over the difference from short/long.
-- sellTreshold and buyTreshold tells Gekko how big the difference in the lines needs to be for it to be considered a trend. If you set these to 0 each line cross would trigger new advice.
+- the down treshold and the up treshold tell Gekko how big the difference in the lines needs to be for it to be considered a trend. If you set these to 0 each line cross would trigger new advice.
 - persistence tells Gekko how long the thresholds needs to be met until Gekko considers the trend to be valid.
 
 ### PPO
@@ -157,17 +162,19 @@ Very similar to MACD but also a little different, read more [here](http://stockc
       long: 26,
       signal: 9,
       // the difference between the EMAs (to act as triggers)
-      sellThreshold: -0.3,
-      buyThreshold: 0.3,
-      // How many candle intervals until trigger fires
-      persistence: 1,
-      // Provide debugging output / verbose output
+      thresholds: {
+        down: -0.025,
+        up: 0.025,
+        // How many candle intervals should a trend persist
+        // before we consider it real?
+        persistence: 2
+      }
     };
 
 - short is the short EMA that moves closer to the real market (including noise)
 - long is the long EMA that lags behind the market more but is also more resistant to noise.
 - signal is the EMA weight calculated over the difference from short/long.
-- sellTreshold and buyTreshold tells Gekko how big the difference in the lines needs to be for it to be considered a trend. If you set these to 0 each line cross would trigger new advice.
+- the down treshold and the up treshold tell Gekko how big the difference in the lines needs to be for it to be considered a trend. If you set these to 0 each line cross would trigger new advice.
 - persistence tells Gekko how long the thresholds needs to be met until Gekko considers the trend to be valid.
 
 ## Enabling plugins
@@ -299,15 +306,15 @@ Mailer will automatically email you whenever Gekko has a new advice.
 - Email is your email address from which Gekko will send emails (to the same address).
 - password is the email password: Gekko needs to login to your account to send emails to you:
 
-  You don't have to set your password here, if you leave it blank we will ask it
-  when Gekko's starts.
-  
-  NOTE: Gekko is an open source project < https://github.com/askmike/gekko >,
-  make sure you looked at the code or trust the maintainer of this bot when you
-  fill in your email and password.
-  
-  WARNING: If you have NOT downloaded Gekko from the github page above we CANNOT
-  guarantuee that your email address & password are safe!
+  > You don't have to set your password here, if you leave it blank we will ask it
+  > when Gekko's starts.
+  >
+  > NOTE: Gekko is an open source project < https://github.com/askmike/gekko >,
+  > make sure you looked at the code or trust the maintainer of this bot when you
+  > fill in your email and password.
+  >
+  > WARNING: If you have NOT downloaded Gekko from the github page above we CANNOT
+  > guarantuee that your email address & password are safe!
 
 - tag is some text that Gekko will put in all subject lines so you can easily group all advices together.
 
@@ -350,7 +357,7 @@ Campfire bot is a small plugin that connects Gekko to a Campfire room and lets u
 
 ### Redis beacon
 
-This is an advanced plugin only for programmers! If you are interested in this read more [here](https://github.com/askmike/gekko/blob/localDB/docs/internals/plugins.md#redis-beacon).
+This is an advanced plugin only for programmers! If you are interested in this read more [here](https://github.com/askmike/gekko/blob/master/docs/internals/plugins.md#redis-beacon).
 
     config.redisBeacon = {
       enabled: false,
