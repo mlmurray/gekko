@@ -16,7 +16,7 @@ var PPO = require('./indicators/PPO.js');
 var TradingMethod = function () {
   _.bindAll(this);
 
-  this.currentTrend = 'none';
+  this.currentTrend;
   this.trendDuration = 0;
 
   this.historySize = config.tradingAdvisor.historySize;
@@ -73,7 +73,16 @@ TradingMethod.prototype.calculateAdvice = function () {
   var macdHist = macd - macdSignal;
   var ppoHist = ppo - ppoSignal;
 
-  if(ppoHist > settings.buyThreshold) {
+
+  if (this.currentTrend == undefined ) {
+    // We just started the program and we don't have a trend, so set it and wait until next time.
+    if (ppoHist > settings.buyTreshold)
+      this.currentTrend = 'up';
+    else
+      this.currentTrend = 'down';
+    this.advice();            
+
+  } else if(ppoHist > settings.buyThreshold) {
 
     if(this.currentTrend === 'down')
       this.trendDuration = 0;
