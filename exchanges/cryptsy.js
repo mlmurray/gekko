@@ -41,6 +41,9 @@ Trader.prototype.return_trades = function(market, callback) {
         //log.debug('id is', market_id);
         // Display user's trades in that market
         client.markettrades(market_id, function(trades) {
+            if (err || !trades || trades.length === 0)
+              return this.retry(this.return_trades, args, err);
+
             m_id = market_id;
             //log.debug("Grabbing trades for id ", market_id);
             if(trades.length) {
@@ -83,6 +86,10 @@ Trader.prototype.get_bid_ask = function(market, callback) {
       // Display user's trades in that market
       client.markettrades(market_id, function(trades) {
           //log.debug("Grabbing trades for id ", market_id);
+
+        if (err || !trades || trades.length === 0)
+              return this.retry(this.get_bid_ask, args, err);
+
           if(trades.length) {
             var data_output = { };
             trades = trades.reverse();
