@@ -150,7 +150,7 @@ Manager.prototype.trade = function(what) {
         amount = amount * this.tradePercent / 100;
       }
 
-      if(config.lossAvoidant && this.lastSell && price > this.lastSell ) ) {
+      if(config.lossAvoidant && this.lastSell && price > this.lastSell ) {
         log.info('We are Loss Avoidant.  Got advice to buy at ', price, 'but our last selling price was ', this.lastSell);
         log.info('Skipping this trend.');
       }
@@ -177,7 +177,7 @@ Manager.prototype.trade = function(what) {
         log.debug('Trade Percent: adjusting amount', amount, 'by ', this.tradePercent, '%');
         amount = amount * this.tradePercent / 100;
       }
-      if(config.lossAvoidant && this.lastBuy && price < this.lastBuy )) {
+      if(config.lossAvoidant && this.lastBuy && price < this.lastBuy ) {
         log.info('We are Loss Avoidant.  Got advice to sell at ', price, 'but our last buying price was ', this.lastBuy);
         log.info('Skipping this trend.');
       }
