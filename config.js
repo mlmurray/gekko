@@ -120,6 +120,7 @@ config.PPO = {
 config.trader = {
   enabled: true,
   tradePercent: 10,
+  lossAvoidant: false,
   key: '',
   secret: '',
   username: '' // your username, only fill in when using bitstamp or cexio

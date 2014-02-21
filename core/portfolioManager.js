@@ -34,6 +34,9 @@ var Manager = function(conf) {
   this.order;
   this.action;
 
+  this.lastSell;
+  this.lastBuy;
+
   this.directExchange = exchangeMeta.direct;
   this.infinityOrderExchange = exchangeMeta.infinityOrder;
 
@@ -129,6 +132,7 @@ Manager.prototype.trade = function(what) {
 
     if(what === 'BUY') {
 
+
       // do we need to specify the amount we want to buy?
       if(this.infinityOrderExchange)
         amount = 10000;
@@ -146,7 +150,14 @@ Manager.prototype.trade = function(what) {
         amount = amount * this.tradePercent / 100;
       }
 
-      this.buy(amount, price);
+      if(config.lossAvoidant && this.lastSell && price > this.lastSell ) ) {
+        log.info('We are Loss Avoidant.  Got advice to buy at ', price, 'but our last selling price was ', this.lastSell);
+        log.info('Skipping this trend.');
+      }
+      else {
+        this.buy(amount, price);
+        this.lastBuy = price;
+      }
 
     } else if(what === 'SELL') {
 
@@ -166,8 +177,13 @@ Manager.prototype.trade = function(what) {
         log.debug('Trade Percent: adjusting amount', amount, 'by ', this.tradePercent, '%');
         amount = amount * this.tradePercent / 100;
       }
-      
-      this.sell(amount, price);
+      if(config.lossAvoidant && this.lastBuy && price < this.lastBuy )) {
+        log.info('We are Loss Avoidant.  Got advice to sell at ', price, 'but our last buying price was ', this.lastBuy);
+        log.info('Skipping this trend.');
+      }
+      else {
+        this.sell(amount, price);
+      }
     }
   };
   async.series([
