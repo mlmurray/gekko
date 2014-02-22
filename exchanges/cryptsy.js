@@ -30,7 +30,8 @@ var Trader = function(config) {
 
 
 Trader.prototype.return_trades = function(market, callback) {
-
+  var args = _.toArray(arguments);
+  var err;
   var m_id;
   var main_trades;
   var client = this.cryptsy;
@@ -75,7 +76,8 @@ Trader.prototype.return_trades = function(market, callback) {
 
 
 Trader.prototype.get_bid_ask = function(market, callback) {
-
+  var err;
+  var args = _.toArray(arguments);
   var m_id;
   var main_trades;
   var client = this.cryptsy;
@@ -172,7 +174,9 @@ Trader.prototype.sell = function(amount, price, callback) {
 
 
 Trader.prototype.place_order = function(market_name, trans_type, amount, price, callback) {
-
+  var args = _.toArray(arguments);
+  var err;
+  
   var client = this.cryptsy;
 
   //log.debug(trans_type, 'order placed for ', amount, this.asset, ' @', price, this.currency);
