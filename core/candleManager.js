@@ -369,6 +369,8 @@ Manager.prototype.processHistoryStats = function() {
 
   // how many more minutes do we need?
   history.toFetch = history.timespan - history.available.minutes;
+  log.debug('History spans', history.timespan, 'and we have', history.available.minutes);
+  log.debug('Still need to Fetch', history.toFetch, 'minutes');
 
   if(!history.toFetch < 1) {
     // we have appear to have full history
