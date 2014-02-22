@@ -45,7 +45,7 @@ Trader.prototype.return_trades = function(market, callback) {
         // Display user's trades in that market
         client.markettrades(market_id, function(trades) {
             if (!trades || trades.length === 0)
-              return self.retry(this.return_trades, args, err);
+              return self.retry(self.return_trades, args, err);
 
             m_id = market_id;
             //log.debug("Grabbing trades for id ", market_id);
@@ -70,7 +70,7 @@ Trader.prototype.return_trades = function(market, callback) {
   }
   catch(err) {
     log.info("Crytpsy API had an error: ", err, "Retrying.");
-    return self.retry(this.return_trades, args, err);
+    return self.retry(self.return_trades, args, err);
   }
 
   //this.market_id = m_id;  
@@ -94,7 +94,7 @@ Trader.prototype.get_bid_ask = function(market, callback) {
           //log.debug("Grabbing trades for id ", market_id);
 
         if ( !trades || trades.length === 0)
-              return self.retry(this.get_bid_ask, args, err);
+              return self.retry(self.get_bid_ask, args, err);
 
           if(trades.length) {
             var data_output = { };
@@ -198,7 +198,7 @@ Trader.prototype.place_order = function(market_name, trans_type, amount, price, 
   }
   catch(err){
     log.info("Crytpsy API had an error in place_order: ", err, "Retrying.");
-    return self.retry(this.place_order, args, err);
+    return self.retry(self.place_order, args, err);
   }
 }
 
