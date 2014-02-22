@@ -210,14 +210,20 @@ var exchanges = [
     slug: 'kraken',
     direct: false,
     infinityOrder: false,
-    currencies: ['XRP', 'EUR', 'KRW', 'USD', 'LTC', 'XVN'],
-    assets: ['LTC', 'NMC', 'XBT', 'XVN', 'EUR', 'KRW', 'USD'],
+    currencies: [ 'XRP', 'EUR', 'KRW', 'USD', 'LTC', 'XVN', 'XDG', 'XBT' ],
+    assets: ['LTC', 'NMC', 'XBT', 'XVN', 'EUR', 'KRW', 'USD', 'XDG' ],
     markets: [
       {
         pair: ['XRP', 'LTC'], minimalOrder: { amount: 0.01, unit: 'currency' }
       },
       {
         pair: ['EUR', 'LTC'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      },
+      {
+        pair: ['XDG', 'XBT'], minimalOrder: { amount: 0.01, unit: 'currency' }
+      },
+      {
+        pair: ['XBT', 'XDG'], minimalOrder: { amount: 0.01, unit: 'currency' }
       },
       {
         pair: ['KRW', 'LTC'], minimalOrder: { amount: 0.01, unit: 'currency' }
