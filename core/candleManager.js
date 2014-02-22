@@ -61,7 +61,7 @@ var async = require('async');
 
 var util = require('./util');
 var config = util.getConfig();
-// var backtest = config.backtest;
+var backtest = config.backtest;
 var tradingAdvisor = config.tradingAdvisor;
 
 var equals = util.equals;
@@ -82,9 +82,9 @@ var Manager = function() {
   //  - full history
   //  - fetch start
   //  - backtest enabled
-  // if(backtest.enabled)
-  //   this.startTime = moment(backtest.from).utc()
-  // else
+  if(backtest.enabled)
+    this.startTime = moment(backtest.from).utc()
+   else
     this.startTime = utc();
 
   // set the start current day
@@ -341,7 +341,7 @@ Manager.prototype.checkDaysMeta = function(err, results) {
     return true;
 
   }, this);
-
+  log.debug('History calculated: we have ', available.minutes, 'minutes of history');
   this.history.available = available;
 }
 
