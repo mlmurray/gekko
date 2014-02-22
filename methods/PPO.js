@@ -81,14 +81,13 @@ method.check = function() {
   
   if (!settings.tradeOnStart && this.trend.direction === 'undefined' ) {
     // We just started the program and we don't have a trend, so set it and wait until next time.
-    log.debug("Trade On Start Disabled and No Direction Defined.");
     if (ppoHist > settings.thresholds.up)
       this.trend.direction = 'up';
     else
       this.trend.direction = 'down';
+    log.debug("Trade On Start Disabled and No Direction Defined. Setting direction to", this.trend.direction);
     this.advice(); 
   } else if(ppoHist > settings.thresholds.up) {
-
     // new trend detected
     if(this.trend.direction !== 'up')
       this.trend = {
@@ -112,7 +111,6 @@ method.check = function() {
       this.advice();
     
   } else if(ppoHist < settings.thresholds.down) {
-
     // new trend detected
     if(this.trend.direction !== 'down')
       this.trend = {
