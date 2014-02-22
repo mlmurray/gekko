@@ -35,6 +35,8 @@ Trader.prototype.return_trades = function(market, callback) {
   var m_id;
   var main_trades;
   var client = this.cryptsy;
+  var self = this;
+
 
   //log.debug('client is ', client);
   try { 
@@ -43,7 +45,7 @@ Trader.prototype.return_trades = function(market, callback) {
         // Display user's trades in that market
         client.markettrades(market_id, function(trades) {
             if (!trades || trades.length === 0)
-              return this.retry(this.return_trades, args, err);
+              return self.retry(this.return_trades, args, err);
 
             m_id = market_id;
             //log.debug("Grabbing trades for id ", market_id);
@@ -68,7 +70,7 @@ Trader.prototype.return_trades = function(market, callback) {
   }
   catch(err) {
     log.info("Crytpsy API had an error: ", err, "Retrying.");
-    return this.retry(this.return_trades, args, err);
+    return self.retry(this.return_trades, args, err);
   }
 
   //this.market_id = m_id;  
@@ -81,6 +83,8 @@ Trader.prototype.get_bid_ask = function(market, callback) {
   var m_id;
   var main_trades;
   var client = this.cryptsy;
+  var self = this;
+
 
   //log.debug('client is ', client);
   client.getmarketid(market, function(market_id) {
@@ -90,7 +94,7 @@ Trader.prototype.get_bid_ask = function(market, callback) {
           //log.debug("Grabbing trades for id ", market_id);
 
         if ( !trades || trades.length === 0)
-              return this.retry(this.get_bid_ask, args, err);
+              return self.retry(this.get_bid_ask, args, err);
 
           if(trades.length) {
             var data_output = { };
@@ -176,7 +180,9 @@ Trader.prototype.sell = function(amount, price, callback) {
 Trader.prototype.place_order = function(market_name, trans_type, amount, price, callback) {
   var args = _.toArray(arguments);
   var err;
-  
+  var self = this;
+
+
   var client = this.cryptsy;
 
   //log.debug(trans_type, 'order placed for ', amount, this.asset, ' @', price, this.currency);
@@ -192,7 +198,7 @@ Trader.prototype.place_order = function(market_name, trans_type, amount, price, 
   }
   catch(err){
     log.info("Crytpsy API had an error in place_order: ", err, "Retrying.");
-    return this.retry(this.place_order, args, err);
+    return self.retry(this.place_order, args, err);
   }
 }
 
