@@ -59,6 +59,8 @@ method.log = function() {
   log.debug('\t', 'ppo:', result.toFixed(digits));
   log.debug('\t', 'pposignal:', ppoSignal.toFixed(digits));
   log.debug('\t', 'ppohist:', (result - ppoSignal).toFixed(digits));  
+  log.debug('\t', 'Up Threshold:', settings.thresholds.up);
+  log.debug('\t', 'Down Threshold:', settings.thresholds.down);  
 }
 
 method.check = function() {
