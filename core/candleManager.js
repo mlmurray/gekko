@@ -437,13 +437,17 @@ Manager.prototype.checkHistoryAge = function(data) {
     this.increaseDay();
 
   this.minumum = history.available.last.m.clone().add('m', 1);
-  var gaps = MINUTES_IN_DAY * this.gapPercent;
 
-  if(this.minumum > this.fetch.start.m)
+  // numbers in milliseconds 
+  var gap = this.fetch.start.m.diff(this.minumum, 'seconds' );
+
+  if( gap <= 0 )
     // we're all good, process normally
     return;
   else {
-    log.debug('We ran in to a gap: fetch at ', this.fetch.start.m._d, 'minimum is', this.minumum._d  );
+    var gapAllowed = MINUTES_IN_DAY * this.gapPercent;
+    var gapMinutes = gap / 60; 
+    log.debug('We ran in to a gap of:', gapMinutes, 'minutes, (', gapMinutes / MINUTES_IN_DAY, '%), minimum is', gapAllowed );
   }
 
   // there is a gap, mark current day as corrupted and process
