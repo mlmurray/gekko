@@ -45,6 +45,7 @@ var Manager = function(conf) {
   });
   this.minimalOrder = this.marketConfig.minimalOrder;
 
+  this.lossAvoidant = conf.lossAvoidant;
   this.tradePercent = conf.tradePercent;
   this.currency = conf.currency;
   this.asset = conf.asset;
@@ -150,7 +151,7 @@ Manager.prototype.trade = function(what) {
         amount = amount * this.tradePercent / 100;
       }
 
-      if(config.lossAvoidant && this.lastSell && price > this.lastSell ) {
+      if(this.lossAvoidant && this.lastSell && price > this.lastSell ) {
         log.info('We are Loss Avoidant.  Got advice to buy at ', price, 'but our last selling price was ', this.lastSell);
         log.info('Skipping this trend.');
       }
@@ -177,7 +178,7 @@ Manager.prototype.trade = function(what) {
         log.debug('Trade Percent: adjusting amount', amount, 'by ', this.tradePercent, '%');
         amount = amount * this.tradePercent / 100;
       }
-      if(config.lossAvoidant && this.lastBuy && price < this.lastBuy ) {
+      if(this.lossAvoidant && this.lastBuy && price < this.lastBuy ) {
         log.info('We are Loss Avoidant.  Got advice to sell at ', price, 'but our last buying price was ', this.lastBuy);
         log.info('Skipping this trend.');
       }
